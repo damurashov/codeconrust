@@ -14,23 +14,23 @@ impl Sol {
 
 impl Solution for Sol {
     fn first_bad_version(&self, n: i32) -> i32 {
-        let mut left_bound: i32 = 0;
-        let mut right_bound: i32 = n + 1;
-        let mut pos = ((left_bound as i64 + right_bound as i64) / 2) as i32;
+        let mut left_bound: i64 = 0;
+        let mut right_bound: i64 = n as i64 + 1;
+        let mut pos = (left_bound + right_bound) / 2;
 
         while left_bound <= right_bound {
-            pos = ((left_bound as i64 + right_bound as i64) / 2i64) as i32;
+            pos = (left_bound + right_bound) / 2;
 
-            if self.isBadVersion(pos) && !self.isBadVersion(pos - 1) {
-                return pos;
-            } else if self.isBadVersion(pos) {
+            if self.isBadVersion(pos as i32) && !self.isBadVersion(pos as i32 - 1) {
+                return pos as i32;
+            } else if self.isBadVersion(pos as i32) {
                 right_bound = pos - 1;
             } else {
                 left_bound = pos + 1;
             }
         }
 
-        pos
+        pos as i32
     }
 }
 
@@ -45,13 +45,14 @@ impl InputData {
 }
 
 fn main() {
-    let input_data: [InputData; 6] = [
+    let input_data: [InputData; 7] = [
         InputData::new_from_bounds(1, 1),
         InputData::new_from_bounds(1, 2),
         InputData::new_from_bounds(3, 3),
         InputData::new_from_bounds(2, 3),
         InputData::new_from_bounds(4, 42),
         InputData::new_from_bounds(1702766719, 2126753390),
+        InputData::new_from_bounds(2147483647, 2147483647),
     ];
 
     for input in &input_data {
