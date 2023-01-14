@@ -45,10 +45,11 @@ impl InputData {
 }
 
 fn main() {
-    let input_data: [InputData; 5] = [
+    let input_data: [InputData; 6] = [
         InputData::new_from_bounds(1, 1),
         InputData::new_from_bounds(1, 2),
         InputData::new_from_bounds(3, 3),
+        InputData::new_from_bounds(2, 3),
         InputData::new_from_bounds(4, 42),
         InputData::new_from_bounds(42, 42),
     ];
