@@ -19,6 +19,8 @@ impl Solution for Sol {
         let mut pos = (left_bound + right_bound) / 2;
 
         while left_bound <= right_bound {
+            pos = (left_bound + right_bound) / 2;
+
             if self.isBadVersion(pos) && !self.isBadVersion(pos - 1) {
                 return pos;
             } else if self.isBadVersion(pos) {
@@ -32,6 +34,28 @@ impl Solution for Sol {
     }
 }
 
+struct InputData(Sol, i32);
+
+impl InputData {
+    fn new_from_bounds(first_bad: i32, n_commits: i32) -> InputData {
+        assert!(n_commits >= first_bad && first_bad > 0);
+
+        InputData(Sol{first_bad}, n_commits)
+    }
+}
+
 fn main() {
-    println!("Hello, world!");
+    let input_data: [InputData; 5] = [
+        InputData::new_from_bounds(1, 1),
+        InputData::new_from_bounds(1, 2),
+        InputData::new_from_bounds(3, 3),
+        InputData::new_from_bounds(4, 42),
+        InputData::new_from_bounds(42, 42),
+    ];
+
+    for input in &input_data {
+        let result = input.0.first_bad_version(input.1);
+        assert!(result == input.0.first_bad);
+        println!("Actual: {}, Found: {}", input.0.first_bad, result);
+    }
 }
