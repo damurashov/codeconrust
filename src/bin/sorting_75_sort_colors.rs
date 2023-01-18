@@ -56,7 +56,7 @@ impl Sol {
         if nums.len() > 1 {
             let pivot = partition(nums);
             let len = nums.len();
-            Self::sort(&mut nums[0..pivot as usize], partition);
+            Self::sort(&mut nums[0..(pivot + 1) as usize], partition);
             Self::sort(&mut nums[(pivot + 1) as usize..len], partition);
         }
     }
@@ -69,4 +69,14 @@ impl Solution for Sol {
 }
 
 fn main() {
+    let mut vecs: [Vec<i32>; 3] = [
+        vec![0,2,1,0,2,1,2],
+        vec![0,2,1],
+        vec![0],
+    ];
+
+    for i in 0..vecs.len() {
+        Sol::sort_colors(&mut vecs[i]);
+        println!("{:?}", &mut vecs[i]);
+    }
 }
