@@ -18,9 +18,11 @@ const MIN: i32 = -3 * 10000 - 1;
 pub fn max_subarray_sum_circular(nums: &Vec<i32>) -> i32 {
     let len = nums.len();
     let mut right_max = nums.clone();
+    let mut right_sum = nums[len - 1];
 
     for i in (0..right_max.len() - 1).rev() {
-        right_max[i] = *[right_max[i + 1] + right_max[i], right_max[i + 1]].iter().max().unwrap();
+        right_sum += nums[i];
+        right_max[i] = *[right_sum, right_max[i + 1]].iter().max().unwrap();
     }
 
     let mut normal_max_sum = nums[0];
@@ -50,7 +52,8 @@ pub fn max_subarray_sum_circular(nums: &Vec<i32>) -> i32 {
 //}
 
 fn main() {
-    let arr: [Vec<i32>; 5] = [
+    let arr: [Vec<i32>; 6] = [
+        vec![-2,4,-5,4,-5,9,4],
         vec![5, -3, 5],
         vec![-1],
         vec![-1, -2],
