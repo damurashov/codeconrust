@@ -15,52 +15,32 @@ use std::vec::Vec;
 
 const MIN: i32 = -3 * 10000 - 1;
 
-#[inline(always)]
-fn as_normalized_pos(pos: i32, shift: i32, total_length: usize) -> usize {
-    let ret = pos + shift;
-
-    if ret <= 0 {
-        ((total_length as i32 + (ret % total_length as i32)) % total_length as i32) as usize
-    } else {
-        (ret % total_length as i32) as usize
-    }
-}
-
 pub fn max_subarray_sum_circular(nums: &Vec<i32>) -> i32 {
     let len = nums.len();
-    let mut left: i32 = 0;
-    let mut right: i32 = 0;
-    let mut current_sum = nums[0];
-    let mut max_sum = current_sum;
+    let mut right_max = nums.clone();
 
-    while ((right - left) as usize) < len - 1 && left > -(len as i32)
-            && right < len as i32 {
-        let step_left_candidate = current_sum + nums[as_normalized_pos(left, -1, len)];
-        let step_right_candidate = current_sum + nums[as_normalized_pos(right, 1, len)];
-        let override_left_candidate = nums[as_normalized_pos(left, -1, len)];
-        let override_right_candidate = nums[as_normalized_pos(right, 1, len)];
-        current_sum = *[step_left_candidate, step_right_candidate,
-            override_left_candidate, override_right_candidate].iter().max()
-            .unwrap();
+    for i in (0..right_max.len() - 1).rev() {
+        right_max[i] = *[right_max[i + 1] + right_max[i], right_max[i + 1]].iter().max().unwrap();
+    }
 
-        if current_sum == step_left_candidate {
-            left -= 1;
-        } else if current_sum == step_right_candidate {
-            right += 1;
-        } else if current_sum == override_left_candidate {
-            left -= 1;
-            right = left;
-        } else if current_sum == override_right_candidate {
-            right += 1;
-            left = right;
-        }
+    let mut normal_max_sum = nums[0];
+    let mut overlap_max_sum = nums[0];
+    let mut normal_current_sum = nums[0];
+    let mut overlap_suffix_sum = 0;
 
-        if current_sum > max_sum {
-            max_sum = current_sum;
+    for i in 0..nums.len() - 1 {
+        normal_current_sum = *[nums[i + 1], normal_current_sum + nums[i + 1]]
+            .iter().max().unwrap();
+        normal_max_sum = *[normal_current_sum, normal_max_sum].iter().max().unwrap();
+        overlap_suffix_sum += nums[i];
+
+        if i < len - 1 {
+            overlap_max_sum = *[overlap_max_sum,
+                overlap_suffix_sum + right_max[i + 1]].iter().max().unwrap();
         }
     }
 
-    max_sum
+    *[normal_max_sum, overlap_max_sum].iter().max().unwrap()
 }
 
 //impl Solution {
